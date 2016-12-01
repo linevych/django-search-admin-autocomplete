@@ -1,0 +1,12 @@
+.easy-autocomplete {
+    float: left;
+    margin-right: 50px;
+}
+
+.easy-autocomplete-container ul {
+    margin-left: 0;
+}
+
+.easy-autocomplete-container {
+    width: 350px;
+}
