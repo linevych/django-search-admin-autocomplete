@@ -1,3 +1,3 @@
 include README.rst
-recursive-include search_admin_autocomplete/static/*
-recursive-include search_admin_autocomplete/templates/*
+recursive-include search_admin_autocomplete/static *
+recursive-include search_admin_autocomplete/templates *
