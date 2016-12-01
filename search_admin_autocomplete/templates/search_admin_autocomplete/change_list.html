@@ -1,10 +1,40 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% extends "admin/change_list.html" %}
+{% load i18n admin_urls static admin_list %}
+
+{% block extrastyle %}
+    {{ block.super }}
+    <link type="text/css" href="{% static 'easy_autocomplete/easy-autocomplete.min.css' %}" rel="stylesheet">
+    <link type="text/css" href="{% static 'search_admin_autocomplete/css/styles.css' %}" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js" crossorigin="anonymous"></script>
+    <script src="{% static 'easy_autocomplete/jquery.easy-autocomplete.js' %}"></script>
+    <script type="text/javascript">
+        $(function () {
+            var options = {
+                url: function (phrase) {
+                    return "search/" + phrase;
+                },
+                getValue: "keyword",
+
+                template: {
+                    type: "links",
+                    fields: {
+                        link: "url"
+                    }
+                },
+                list: {
+                    maxNumberOfElements: 6,
+                    onChooseEvent: function () {
+                        location.href = $('#searchbar').getSelectedItemData().admin_url
+                    },
+                    match: {
+                        enabled: true
+                    }
+                }
+
+            };
+            $("#searchbar").easyAutocomplete(options);
+        })
+    </script>
+{% endblock %}
+
+{% block search %}{% search_form cl %}{% endblock %}

@@ -52,7 +52,7 @@ class SearchAutoCompleteAdmin(admin.ModelAdmin):
             for instance in self.model.objects.filter(**options):
                 data.append(
                     {
-                        keyword: getattr(instance, keyword),
+                        'keyword': getattr(instance, keyword),
                         'url': self.get_change_form_url(self.model, instance, self.model._meta.app_label)
                     }
                 )
