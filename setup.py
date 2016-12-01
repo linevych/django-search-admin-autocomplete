@@ -6,10 +6,11 @@ with open(os.path.join(os.path.dirname(__file__), 'README.rst')) as readme:
 
 setup(
     name='django-search-admin-autcomplete',
-    version='0.1',
+    version='0.1.1',
     packages=[
         'search_admin_autocomplete',
     ],
+    include_package_data=True,
     url='https://github.com/linevich/django-search-admin-autocomplete',
     license='MIT',
     long_description=README,
