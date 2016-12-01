@@ -18,7 +18,7 @@ Installation
     ...
     'search_admin_autocomplete',
     ...
-]
+    ]
 
 Usage
 =====
