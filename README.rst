@@ -8,10 +8,12 @@ Simple django app that add autocomplete to search inside admin panel.
 Installation
 ============
 
-.. code-block:: python
-    pip install django-search-admin-autocomplete
+.. code-block:: bash
+
+    pip install git+https://github.com/linevich/django-search-admin-autocomplete.git
 
 .. code-block:: python
+
     INSTALLED_APPS = [
     ...
     'search_admin_autocomplete',
