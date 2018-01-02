@@ -1,5 +1,5 @@
 """
-WSGI config for django_search_admin_autcomplete project.
+WSGI config for django_search_admin_autocomplete project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
