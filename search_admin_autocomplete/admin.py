@@ -24,6 +24,14 @@ class SearchAutoCompleteAdmin(admin.ModelAdmin):
     """
     change_list_template = 'search_admin_autocomplete/change_list.html'
     search_prefix = '__contains'
+    
+    def __init__(self, *args, **kwargs):
+        super(SearchAutoCompleteAdmin, self).__init__(*args, **kwargs)
+        try:
+            field_id = [f for f in self.model._meta.get_fields() if type(f) is AutoField]
+            self.field_id = field_id[0].name
+        except Exception:
+            self.field_id = 'id'
 
     def get_urls(self):
         urls = super(SearchAutoCompleteAdmin, self).get_urls()
@@ -56,7 +64,8 @@ class SearchAutoCompleteAdmin(admin.ModelAdmin):
                 data.append(
                     {
                         'keyword': getattr(instance, keyword),
-                        'url': self.get_change_form_url(self.model, instance, self.model._meta.app_label)
+                        'url': self.get_change_form_url(
+                            self.model, instance, self.model._meta.app_label, self.field_id)
                     }
                 )
 
@@ -65,7 +74,7 @@ class SearchAutoCompleteAdmin(admin.ModelAdmin):
             return HttpResponse(content=data, content_type='application/json')
 
     @staticmethod
-    def get_change_form_url(model, instance, app_label):
+    def get_change_form_url(model, instance, app_label, field_id):
         """
         Returns url admin change view for model instance.
 
@@ -75,5 +84,5 @@ class SearchAutoCompleteAdmin(admin.ModelAdmin):
         :return: url to change form.
         """
         return reverse(
-            "admin:%s_%s_change" % (app_label, str(model.__name__).lower()), args=(instance.id,)
+            "admin:%s_%s_change" % (app_label, str(model.__name__).lower()), args=(getattr(instance, field_id),)
         )
