@@ -81,6 +81,7 @@ class SearchAutoCompleteAdmin(admin.ModelAdmin):
         :param model: django model.
         :param instance: model instance.
         :param app_label: current django app label.
+        :param field_id: field id name
         :return: url to change form.
         """
         return reverse(
