@@ -6,7 +6,7 @@ with open(os.path.join(os.path.dirname(__file__), 'README.rst')) as readme:
 
 setup(
     name='django-search-admin-autocomplete',
-    version='0.1.2',
+    version='0.2.0',
     packages=[
         'search_admin_autocomplete',
     ],
