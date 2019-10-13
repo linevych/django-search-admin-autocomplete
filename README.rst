@@ -14,7 +14,7 @@ Installation
 
     pip install django-search-admin-autocomplete
     # OR
-    pip install git+https://github.com/linevich/django-search-admin-autocomplete.git
+    pip install git+https://github.com/linevych/django-search-admin-autocomplete.git
 
 .. code-block:: python
 
