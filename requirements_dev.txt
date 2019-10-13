@@ -1,0 +1,6 @@
+-r requirements.txt
+
+# Type Checking
+mypy==0.730
+mypy_extensions==0.4.1
+django-stubs==1.2.0

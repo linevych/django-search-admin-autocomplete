@@ -1,12 +1,18 @@
-import json
+from functools import reduce
+from operator import or_
+from typing import List
 
-from django.contrib import admin
 from django.conf.urls import url
+from django.contrib import admin
+from django.db.models import Q, Model
+from django.http import HttpRequest
+from django.urls.resolvers import URLPattern
+
 try:
     from django.urls import reverse
 except ImportError:
-    from django.core.urlresolvers import reverse
-from django.http.response import HttpResponse, HttpResponseBadRequest
+    from django.core.urlresolvers import reverse  # type: ignore
+from django.http.response import HttpResponse, JsonResponse, HttpResponseBadRequest
 
 
 class SearchAutoCompleteAdmin(admin.ModelAdmin):
@@ -23,57 +29,37 @@ class SearchAutoCompleteAdmin(admin.ModelAdmin):
         admin.site.register(MyModel, MyModelAdmin)
     """
     change_list_template = 'search_admin_autocomplete/change_list.html'
+    search_fields = []  # type: List[str]
     search_prefix = '__contains'
+    max_results = 10
 
-    def get_urls(self):
+    def get_urls(self) -> List[URLPattern]:
         urls = super(SearchAutoCompleteAdmin, self).get_urls()
-        api_urls = [
-            url(r'^search/(?P<search_term>\w{0,50})$', self.search_api)
-        ]
+        api_urls = [url(r'^search/(?P<search_term>\w{0,50})$', self.search_api)]
         return api_urls + urls
 
-    def search_api(self, request, search_term):
+    def search_api(self, request: HttpRequest, search_term: str) -> HttpResponse:
         """
         API view that perform search by search term for current model.
-
-        :param request: request
-        :param search_term: word to search.
-        :type search_term: str
-        :return: JSON response with search results.
         """
-        if not self.search_fields:
-            return HttpResponseBadRequest(reason='Mo search_fields defined in {}'.format(self.__name__))
-        elif not search_term:
-            return HttpResponseBadRequest(reason='Mo search term provided')
-        else:
-            keyword = self.search_fields[0]
-            options = {
-                keyword + self.search_prefix: search_term,
-            }
-            data = []
+        if len(self.search_fields) == 0:
+            return HttpResponseBadRequest(reason='Mo search_fields defined in {}'.format(self.__class__.__name__))
 
-            for instance in self.model.objects.filter(**options):
-                data.append(
-                    {
-                        'keyword': getattr(instance, keyword),
-                        'url': self.get_change_form_url(self.model, instance, self.model._meta.app_label)
-                    }
-                )
+        query = [Q(**{'{}{}'.format(field, self.search_prefix): search_term}) for field in self.search_fields]
+        # https://github.com/python/mypy/issues/4150
+        query = reduce(or_, query)  # type: ignore
+        return JsonResponse(data=[{'keyword': self.get_instance_name(item), 'url': self.get_instance_url(item)}
+                                  for item in self.model.objects.filter(query)[0:self.max_results]], safe=False)
 
-            data = json.dumps(data)
+    def get_instance_name(self, instance: Model) -> str:
+        """
+        Format instance name based on value of search fields.
+        """
+        return ", ".join([getattr(instance, field) for field in self.search_fields])
 
-            return HttpResponse(content=data, content_type='application/json')
-
-    @staticmethod
-    def get_change_form_url(model, instance, app_label):
+    def get_instance_url(self, instance: Model) -> str:
         """
         Returns url admin change view for model instance.
-
-        :param model: django model.
-        :param instance: model instance.
-        :param app_label: current django app label.
-        :return: url to change form.
         """
-        return reverse(
-            "admin:%s_%s_change" % (app_label, str(model.__name__).lower()), args=(instance.id,)
-        )
+        url_name = "admin:{}_{}_change".format(self.model._meta.app_label, str(self.model.__name__).lower())
+        return reverse(url_name, args=(instance.pk,))
