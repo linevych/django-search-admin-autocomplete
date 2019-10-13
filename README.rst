@@ -3,9 +3,13 @@ Django-search-admin-autocomplete
 
 Simple django app that add autocomplete to search inside admin panel.
 
-Tested only with Python 3 and Django 1.10.
-
 .. image:: doc/demo.gif
+
+Requirements
+============
+
+- Python: 3.5+
+- Django: >=1.11
 
 Installation
 ============
@@ -35,3 +39,12 @@ Usage
 
     admin.site.register(MyModel, MyModelAdmin)
 
+
+MyPy
+======
+
+This project supports MyPy but to run type checks you need Python 3.6+.
+
+.. code-block:: python
+    pip install -r requirements_dev.txt
+    PYTHONPATH="$PYTHONPATH:$PWD/example" mypy search_admin_autocomplete
