@@ -39,6 +39,34 @@ Usage
 
     admin.site.register(MyModel, MyModelAdmin)
 
+Customization
+=====
+If admin/change_list.html is customized
+
+admin.py
+
+.. code-block:: python
+
+    from search_admin_autocomplete.admin import SearchAutoCompleteAdmin
+
+    class MyModelAdmin(SearchAutoCompleteAdmin)
+    
+        change_list_template = 'admin/custom-list.html'
+    
+        search_fields = ['search_field', ]
+
+    admin.site.register(MyModel, MyModelAdmin)
+
+admin/custom-list.html
+
+.. code-block:: html
+
+    {% extends 'search_admin_autocomplete/change_list.html' %}
+
+    {% block object-tools %}
+    Your custom html...
+    {{ block.super }}
+    {% endblock %}
 
 MyPy
 ====
