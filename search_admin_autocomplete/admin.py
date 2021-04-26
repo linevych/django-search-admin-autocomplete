@@ -55,7 +55,18 @@ class SearchAutoCompleteAdmin(admin.ModelAdmin):
         """
         Format instance name based on value of search fields.
         """
-        return ", ".join([getattr(instance, field) for field in self.search_fields])
+        values = []
+
+        for field in self.search_fields:
+            value = getattr(instance, field)
+            if not value:
+                continue
+            values.append(str(value))
+
+        if not values:
+            return ""
+
+        return ", ".join(values)
 
     def get_instance_url(self, instance: Model) -> str:
         """
