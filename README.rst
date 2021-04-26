@@ -40,7 +40,7 @@ Usage
     admin.site.register(MyModel, MyModelAdmin)
 
 Customization
-=====
+=============
 If admin/change_list.html is customized
 
 admin.py
