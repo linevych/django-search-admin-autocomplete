@@ -7,34 +7,7 @@
     <link type="text/css" href="{% static 'search_admin_autocomplete/css/styles.css' %}" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-2.2.4.min.js" crossorigin="anonymous"></script>
     <script src="{% static 'easy_autocomplete/jquery.easy-autocomplete.js' %}"></script>
-    <script type="text/javascript">
-        $(function () {
-            var options = {
-                url: function (phrase) {
-                    return "search/" + phrase;
-                },
-                getValue: "keyword",
-
-                template: {
-                    type: "links",
-                    fields: {
-                        link: "url"
-                    }
-                },
-                list: {
-                    maxNumberOfElements: 6,
-                    onChooseEvent: function () {
-                        location.href = $('#searchbar').getSelectedItemData().url
-                    },
-                    match: {
-                        enabled: true
-                    }
-                }
-
-            };
-            $("#searchbar").easyAutocomplete(options);
-        })
-    </script>
+    <script src="{% static 'easy_autocomplete/main.js' %}"></script>
 {% endblock %}
 
 {% block search %}{% search_form cl %}{% endblock %}
