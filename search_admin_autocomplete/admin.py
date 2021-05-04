@@ -15,7 +15,7 @@ except ImportError:
 from django.http.response import HttpResponse, JsonResponse, HttpResponseBadRequest
 
 
-class SearchAutoCompleteAdmin(admin.ModelAdmin):
+class SearchAutoCompleteMixin:
     """
     Basic admin class that allows to enable search autocomplete for certain model.
 
@@ -34,7 +34,7 @@ class SearchAutoCompleteAdmin(admin.ModelAdmin):
     max_results = 10
 
     def get_urls(self) -> List[URLPattern]:
-        urls = super(SearchAutoCompleteAdmin, self).get_urls()
+        urls = super().get_urls()
         api_urls = [url(r'^search/(?P<search_term>\w{0,50})$', self.search_api)]
         return api_urls + urls
 
